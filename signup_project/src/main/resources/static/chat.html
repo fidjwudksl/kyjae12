@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>채팅방</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body class="container mt-5">
+<h2>채팅방 목록</h2>
+<input id="roomName" class="form-control mb-2" placeholder="새 채팅방 이름">
+<button onclick="createRoom()" class="btn btn-outline-primary mb-3">채팅방 생성</button>
+<ul id="roomList" class="list-group mb-4"></ul>
+
+<h2>채팅</h2>
+<div id="chatArea" class="border p-3 mb-2" style="height:200px; overflow:auto;"></div>
+<input id="sender" class="form-control mb-2" placeholder="닉네임">
+<input id="message" class="form-control mb-2" placeholder="메시지">
+<button onclick="sendMessage()" class="btn btn-success">전송</button>
+
+<script src="script/chat.js"></script>
+
+<script>
+  // 엔터키로 메시지 전송 처리
+  document.getElementById("message").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();  // 기본 엔터키 동작 방지
+      sendMessage();  // 메시지 전송 함수 호출
+    }
+  });
+
+  // 메시지 전송 함수
+  function sendMessage() {
+    const sender = document.getElementById("sender").value;
+    const message = document.getElementById("message").value;
+
+    if (sender.trim() && message.trim()) {
+      // 서버로 메시지를 보내는 로직을 추가합니다.
+      const chatArea = document.getElementById("chatArea");
+      const messageElement = document.createElement("div");
+      messageElement.textContent = sender + ": " + message;
+      chatArea.appendChild(messageElement);
+
+      // 메시지 입력 필드를 비운다
+      document.getElementById("message").value = "";
+      chatArea.scrollTop = chatArea.scrollHeight;  // 채팅창 스크롤을 가장 아래로
+    }
+  }
+
+  // 채팅방 생성
+  function createRoom() {
+    const roomName = document.getElementById("roomName").value;
+    if (roomName.trim()) {
+      const roomList = document.getElementById("roomList");
+      const roomElement = document.createElement("li");
+      roomElement.classList.add("list-group-item");
+      roomElement.textContent = roomName;
+      roomList.appendChild(roomElement);
+
+      // 채팅방 이름 입력 필드를 비운다
+      document.getElementById("roomName").value = "";
+    }
+  }
+</script>
+</body>
+</html>
